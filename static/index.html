@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Events Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .event {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>GitHub Events Monitor</h1>
+    <div id="events"></div>
+
+    <script>
+        function formatEvent(event) {
+            let message = '';
+            switch(event.action) {
+                case 'push':
+                    message = `${event.author} pushed to "${event.to_branch}" on ${event.timestamp}`;
+                    break;
+                case 'pull_request':
+                    message = `${event.author} submitted a pull request from "${event.from_branch}" to "${event.to_branch}" on ${event.timestamp}`;
+                    break;
+                case 'merge':
+                    message = `${event.author} merged branch "${event.from_branch}" to "${event.to_branch}" on ${event.timestamp}`;
+                    break;
+            }
+            return message;
+        }
+
+        async function fetchEvents() {
+            try {
+                const response = await fetch('/events');
+                const events = await response.json();
+                
+                const eventsContainer = document.getElementById('events');
+                eventsContainer.innerHTML = events.map(event => {
+                    return `<div class="event">${formatEvent(event)}</div>`;
+                }).join('');
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+
+        // Initial fetch
+        fetchEvents();
+
+        // Poll every 15 seconds
+        setInterval(fetchEvents, 15000);
+    </script>
+</body>
+</html>
