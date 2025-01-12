@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>GitHub Events</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Action</th>
+                <th>From Branch</th>
+                <th>To Branch</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="events">
+            <!-- Events will be rendered here -->
+        </tbody>
+    </table>
+    <script>
+        async function fetchEvents() {
+            try {
+                const response = await fetch('http://localhost:5000/events'); // Use the correct URL
+                const events = await response.json();
+    
+                const eventsContainer = document.getElementById('events');
+                eventsContainer.innerHTML = ''; // Clear previous data
+    
+                events.forEach(event => {
+                    // Create a table row
+                    const row = document.createElement('tr');
+                    
+                    // Author column
+                    const authorCell = document.createElement('td');
+                    authorCell.textContent = event.author || 'N/A';
+                    row.appendChild(authorCell);
+
+                    // Action column
+                    const actionCell = document.createElement('td');
+                    actionCell.textContent = event.action || 'N/A';
+                    row.appendChild(actionCell);
+
+                    // From Branch column
+                    const fromBranchCell = document.createElement('td');
+                    fromBranchCell.textContent = event.from_branch || 'N/A';
+                    row.appendChild(fromBranchCell);
+
+                    // To Branch column
+                    const toBranchCell = document.createElement('td');
+                    toBranchCell.textContent = event.to_branch || 'N/A';
+                    row.appendChild(toBranchCell);
+
+                    // Timestamp column
+                    const timestampCell = document.createElement('td');
+                    timestampCell.textContent = new Date(event.timestamp).toLocaleString();
+                    row.appendChild(timestampCell);
+                    
+                    // Append the row to the table body
+                    eventsContainer.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+    
+        setInterval(fetchEvents, 15000); // Poll every 15 seconds
+        fetchEvents(); // Initial fetch on load
+    </script>    
+</body>
+</html>
