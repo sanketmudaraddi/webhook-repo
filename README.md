@@ -65,7 +65,7 @@ To see how the webhook updates the UI and MongoDB:
 
    After pushing changes to the `action-repo`, check the UI and MongoDB to verify that the webhook has triggered correctly and that the data is logged properly.
 
-   **Note**: ![alt text](<images/Screenshot 2025-01-12 213911.png>)
+   ![alt text](<images/Screenshot 2025-01-12 213911.png>)
 
 ## Additional Notes
 
